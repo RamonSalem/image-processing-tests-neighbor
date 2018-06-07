@@ -2,6 +2,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -572,8 +574,308 @@ public class Image{
 
         System.out.println(c.hashCode());
     }
+    
+    //Methods using a window around the pixel
+    public BufferedImage applyFilterByType(BufferedImage image, int window, int opType) {
+    	/*
+    	 * 1: medium
+    	 * 2: mediana
+    	 * 3: moda
+    	 * 4: gaussiano
+    	 * 
+    	 * */
+    	if(opType == 1) {
+    		BufferedImage newImg = new BufferedImage(image.getWidth(),image.getHeight(),1);
+            for(int i = 0; i < image.getWidth(); i++){
+                for(int j = 0; j < image.getHeight(); j++ ){
+                    newImg.setRGB(i, j, getRgbResultMedium(image, window, i, j));
+                }
+            }
+            return newImg;
+    	}
+    	else if(opType == 2) {
+    		BufferedImage newImg = new BufferedImage(image.getWidth(),image.getHeight(),1);
+            for(int i = 0; i < image.getWidth(); i++){
+                for(int j = 0; j < image.getHeight(); j++ ){
+                    newImg.setRGB(i, j, getRgbResultMediana(image, window, i, j));
+                }
+            }
+            return newImg;
+    	}
+    	else if(opType == 3) {
+    		BufferedImage newImg = new BufferedImage(image.getWidth(),image.getHeight(),1);
+            for(int i = 0; i < image.getWidth(); i++){
+                for(int j = 0; j < image.getHeight(); j++ ){
+                    newImg.setRGB(i, j, getRgbResultModa(image, window, i, j));
+                }
+            }
+            return newImg;
+    	}
+    	else if(opType == 4) {
+    		BufferedImage newImg = new BufferedImage(image.getWidth(),image.getHeight(),1);
+            for(int i = 0; i < image.getWidth(); i++){
+                for(int j = 0; j < image.getHeight(); j++ ){
+                    newImg.setRGB(i, j, getRgbResultGaussiano(image, i, j));
+                }
+            }
+            return newImg;
+    	}else if(opType == 5) {
+    		BufferedImage newImg = new BufferedImage(image.getWidth(),image.getHeight(),1);
+            for(int i = 0; i < image.getWidth(); i++){
+                for(int j = 0; j < image.getHeight(); j++ ){
+                    newImg.setRGB(i, j, getRgbResultEdgeDetec(image, i, j, 1));
+                }
+            }
+            return newImg;
+    	}else if(opType == 6) {
+    		BufferedImage newImg = new BufferedImage(image.getWidth(),image.getHeight(),1);
+            for(int i = 0; i < image.getWidth(); i++){
+                for(int j = 0; j < image.getHeight(); j++ ){
+                    newImg.setRGB(i, j, getRgbResultEdgeDetec(image, i, j, 2));
+                }
+            }
+            return newImg;
+    	}else if(opType == 7) {
+    		BufferedImage newImg = new BufferedImage(image.getWidth(),image.getHeight(),1);
+            for(int i = 0; i < image.getWidth(); i++){
+                for(int j = 0; j < image.getHeight(); j++ ){
+                    newImg.setRGB(i, j, getRgbResultEdgeDetec(image, i, j, 3));
+                }
+            }
+            return newImg;
+    	}else {
+    		return null;
+    	}
+    	
+    }
+    
+	public int getRgbResultMedium(BufferedImage image, int window, int i, int j){
+	    	
+	    	ArrayList<Integer> valuesR = new ArrayList<Integer>();
+	    	ArrayList<Integer> valuesG = new ArrayList<Integer>();
+	    	ArrayList<Integer> valuesB = new ArrayList<Integer>();
+	    	
+	    	
+			//Tem que ter 2 variáveis atualizando? 
+			//o i e o j para que possa limitar as iterações dentro da janela
+			/*
+			 * Se o pixel for negativo apenas usa-se 0 para os valores rgb
+			 * 
+			 * Quando for pegar a média, já ir fazendo a media com a iteração, atualizand o valor
+			 * */
+		
+			int sumR = 0;
+			int sumG = 0;
+			int sumB = 0;
+	    	for(int x = i-(window/2), windowX = 0; windowX < window; windowX++,x++){
+	    		
+	    		for(int y = j-(window/2), windowY = 0; windowY < window ; windowY++,y++){
+	    			//System.out.println("WindowX: "+ windowX + " WindowY: "+ wgayindowY);
+	    			//System.out.println("x: "+ x + " y: "+ y);
+	    			
+	    			 if(x >= 0 && y >= 0 && x < image.getWidth() && y < image.getHeight() ) {
+	    				 
+	    				 int rgb = image.getRGB(x, y);
+	                     Color c = new Color(rgb);
+	                     
+	                     valuesR.add(c.getRed());
+	                     valuesG.add(c.getGreen());
+	                     valuesB.add(c.getBlue());
+	                     
+	                     sumR = (sumR + c.getRed());
+	                     sumG = (sumG + c.getGreen());
+	                     sumB = (sumB + c.getBlue());
+	    			 }
+	    			 else {
+	    				 valuesR.add(0);
+	                     valuesG.add(0);
+	                     valuesB.add(0);
+	    			 }
+	            }
+	    	}
+	    	return new Color(sumR/valuesR.size(), sumG/valuesG.size(), sumB/valuesB.size()).getRGB();	
+	    }
+	
+	public int getRgbResultMediana(BufferedImage image, int window, int i, int j){
+    	
+    	ArrayList<Integer> valuesR = new ArrayList<Integer>();
+    	ArrayList<Integer> valuesG = new ArrayList<Integer>();
+    	ArrayList<Integer> valuesB = new ArrayList<Integer>();
+	
+    	for(int x = i-(window/2), windowX = 0; windowX < window; windowX++,x++){
+    		
+    		for(int y = j-(window/2), windowY = 0; windowY < window ; windowY++,y++){
+    			//System.out.println("WindowX: "+ windowX + " WindowY: "+ windowY);
+    			//System.out.println("x: "+ x + " y: "+ y);
+    			
+    			 if(x >= 0 && y >= 0 && x < image.getWidth() && y < image.getHeight() ) {
+    				 
+    				 int rgb = image.getRGB(x, y);
+                     Color c = new Color(rgb);
+                     
+                     valuesR.add(c.getRed());
+                     valuesG.add(c.getGreen());
+                     valuesB.add(c.getBlue());
+                     
+    			 }
+    			 else {
+    				 valuesR.add(0);
+                     valuesG.add(0);
+                     valuesB.add(0);
+    			 }
+            }
+    	}
+    	Collections.sort(valuesR);
+    	Collections.sort(valuesG);
+    	Collections.sort(valuesB);
+    	return new Color(valuesR.get(valuesR.size()/2) , valuesG.get(valuesG.size()/2), valuesB.get(valuesB.size()/2)).getRGB();	
+    }
+	
+	private int getRgbResultModa(BufferedImage image, int window, int i, int j){
+    	
+    	ArrayList<Integer> valuesR = new ArrayList<Integer>();
+    	ArrayList<Integer> valuesG = new ArrayList<Integer>();
+    	ArrayList<Integer> valuesB = new ArrayList<Integer>();
+	
+    	for(int x = i-(window/2), windowX = 0; windowX < window; windowX++,x++){
+    		
+    		for(int y = j-(window/2), windowY = 0; windowY < window ; windowY++,y++){
+    			
+    			 if(x >= 0 && y >= 0 && x < image.getWidth() && y < image.getHeight() ) {
+    				 
+    				 int rgb = image.getRGB(x, y);
+                     Color c = new Color(rgb);
+                     
+                     valuesR.add(c.getRed());
+                     valuesG.add(c.getGreen());
+                     valuesB.add(c.getBlue());
+    			 }
+    			 else {
+    				 valuesR.add(0);
+                     valuesG.add(0);
+                     valuesB.add(0);
+    			 }
+            }
+    	}
+    	return new Color(getModa(valuesR), getModa(valuesG), getModa(valuesB)).getRGB();	
+    }
+	
+private int getRgbResultGaussiano(BufferedImage image, int i, int j){
+    	
+    	double gausValues[][] = new double[3][3];
+    	gausValues[0][0] = 0.0625;
+    	gausValues[0][1] = 0.125;
+    	gausValues[0][2] = 0.0625;
+    	
+    	gausValues[1][0] = 0.125;
+    	gausValues[1][1] = 0.25;
+    	gausValues[1][2] = 0.125;
+    	
+    	gausValues[2][0] = 0.0625;
+    	gausValues[2][1] = 0.125;
+    	gausValues[2][2] = 0.0625;
+    	
+	
+    	double vR = 0;
+    	double vG = 0;
+    	double vB = 0;
+    	
+		for(int x = i-(3/2), windowX = 0; windowX < 3; windowX++,x++){
+		    		
+    		for(int y = j-(3/2), windowY = 0; windowY < 3 ; windowY++,y++){
+    			
+    			 if(x >= 0 && y >= 0 && x < image.getWidth() && y < image.getHeight() ) {
+    				 
+    	    		 int rgb = image.getRGB(x, y);
+                     Color c = new Color(rgb);
+                     vR = vR+(gausValues[windowX][windowY]*c.getRed());
+                     vG = vG+(gausValues[windowX][windowY]*c.getGreen());
+                     vB = vB+(gausValues[windowX][windowY]*c.getBlue());
+    			 }
+            }
+    	}
+    	return new Color((int)vR,(int) vG,(int) vB).getRGB();	
+    }
 
+private int getRgbResultEdgeDetec(BufferedImage image, int i, int j, int opFilter){
+	
+	double filter[][] = new double[3][3];
+	if (opFilter == 1) {
+		filter[0][0] = 1;filter[0][1] = 1;filter[0][2] = 1;
+		filter[1][0] = 0;filter[1][1] = 0;filter[1][2] = 0;
+		filter[2][0] = -1;filter[2][1] = -1;filter[2][2] = -1;
+	}else if(opFilter == 2){
+		filter[0][0] = 1;filter[0][1] = 0;filter[0][2] = -1;
+		filter[1][0] = 1;filter[1][1] = 0;filter[1][2] = -1;
+		filter[2][0] = 1;filter[2][1] = 0;filter[2][2] = -1;
+	}else {
+		filter[0][0] = -1;filter[0][1] = -1;filter[0][2] = -1;
+		filter[1][0] = -1;filter[1][1] = 8;filter[1][2] = -1;
+		filter[2][0] = -1;filter[2][1] = -1;filter[2][2] = -1;
+	} 
+	
+	
 
+	double vR = 1;
+	double vG = 1;
+	double vB = 1;
+	
+	for(int x = i-(3/2), windowX = 0; windowX < 3; windowX++,x++){
+	    		
+		for(int y = j-(3/2), windowY = 0; windowY < 3 ; windowY++,y++){
+			
+			 if(x >= 0 && y >= 0 && x < image.getWidth() && y < image.getHeight() ) {
+				 
+	    		 int rgb = image.getRGB(x, y);
+                 Color c = new Color(rgb);
+                 vR = vR+(filter[windowX][windowY]*c.getRed());
+                 vG = vG+(filter[windowX][windowY]*c.getGreen());
+                 vB = vB+(filter[windowX][windowY]*c.getBlue());
+			 }
+        }
+	}
+	
+	 vR = (vR > 255 ? 255 : vR);
+     vG = (vG > 255 ? 255 : vG);
+     vB = (vB > 255 ? 255 : vB);
+     
+     vR = (vR < 0 ? 0 : vR);
+     vG = (vR < 0 ? 0 : vR);
+     vB = (vR < 0 ? 0 : vR);
 
+	
+	//System.out.println("vR: "+ vR+ " vG: "+ vG+ "vB "+ vB);
+	return new Color((int)vR,(int) vG,(int) vB).getRGB();	
+}
+	
+	
+	private int getModa(ArrayList<Integer> arr){
+		
+		//System.out.println('>');
+		//System.out.println(arr.toString());
+		
+		
+		int higherOccur = 0;
+		int previousCont = 0;
+		
+		for(int i = 0; i < arr.size(); i++ ) {
+			int cont = 0;
+			for(int j = 0 ; j < arr.size(); j++) {	
+				
+				if(arr.get(i) == arr.get(j)) {
+					cont++;
+				}
+			}
+			
+			if(cont > previousCont) {
+				higherOccur = i;
+			}
+			previousCont = cont;
+			cont = 0;
+		}
+		//System.out.println(arr.get(higherOccur));
+		return arr.get(higherOccur) ;
+	}
+    
 
 }

@@ -150,11 +150,8 @@ public class MainGui {
 		Panel downPanel = new Panel();
 		
 		/*Text buttons*/
-		TextField aditiveControlText = new TextField();
-		aditiveControlText.setText("Controle aditivo");
-		
-		TextField multiplicativeControlText = new TextField();
-		multiplicativeControlText.setText("Controle multiplicativo");
+		TextField sizeKernelText = new TextField();
+		sizeKernelText.setText("Tamanho janela");
 		
 		JMenu mnNewMenu = new JMenu("Op\u00E7\u00F5es");
 		menuBar.add(mnNewMenu);
@@ -214,142 +211,147 @@ public class MainGui {
 		panel.add(topPanel, BorderLayout.NORTH);
 		topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		/*Button that shows red scheme*/
-		JButton btnShowRed = new JButton("Banda R");
-		btnShowRed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				System.out.println(imgObj.getImage());
-				MainGui.setImageOnFrame(imageResultPanel, imgObj.getBandaRed(imgObj.getImage()));
-			}
-		});
-		topPanel.add(btnShowRed);
-		
-		/*Button that shows green scheme*/
-		JButton btnShowGreen = new JButton("Banda G");
-		btnShowGreen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				System.out.println(imgObj.getImage());
-				MainGui.setImageOnFrame(imageResultPanel, imgObj.getBandaGreen(imgObj.getImage()));
-			}
-		});
-		topPanel.add(btnShowGreen);
-		/*Button that shows blue scheme*/
-		JButton btnShowBlue = new JButton("Banda B");
-		btnShowBlue.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				System.out.println(imgObj.getImage());
-				MainGui.setImageOnFrame(imageResultPanel, imgObj.getBandaBlue(imgObj.getImage()));
-				
-			}
-		});
-		topPanel.add(btnShowBlue);
-
-		/*Button that shows gray scale*/
-		JButton btnGrayScale = new JButton("Escala de cinza");
-		btnGrayScale.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-				
-				System.out.println(imgObj.getImage());
-				MainGui.setImageOnFrame(imageResultPanel, imgObj.toGrayScale(imgObj.getImage()));
-				
-			}
-		});
-		topPanel.add(btnGrayScale);
-
-		/*Button that shows negative rgb*/
-		JButton btmNegativeRgb = new JButton("Negativo RGB");
-		
-		btmNegativeRgb.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-					
-					System.out.println(imgObj.getImage());
-					MainGui.setImageOnFrame(imageResultPanel, imgObj.negativeRgb(imgObj.getImage()));
-					
-				}
-			});
-		
-		topPanel.add(btmNegativeRgb);
-
-		/*Button that shows Y*/
-		
-		JButton btnNegativeY = new JButton("Negativo Y");
-		
-		btnNegativeY.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-					
-					System.out.println(imgObj.getImage());
-					MainGui.setImageOnFrame(imageResultPanel, imgObj.negativeYuv(imgObj.getImage()));
-					
-				}
-			});
-		topPanel.add(btnNegativeY);
-		
 		JButton btnClearRightSpot = new JButton("Limpar");
 		btnClearRightSpot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MainGui.clearPanel(imageResultPanel);
 			}
 		});
-		topPanel.add(btnClearRightSpot);
 		
-		
-		panel.add(downPanel, BorderLayout.SOUTH);
-		
-		/**Button, in down panel, used to additive control */
-		JButton btnAdditiveControl = new JButton("Aplicar");
-		btnAdditiveControl.addActionListener(new ActionListener() {
+		JButton btnDetecBordasF = new JButton("Detec Bordas F1");
+		btnDetecBordasF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
 					//int valueToAdd = Integer.parseInt(aditiveControlText.getText()); 
-					MainGui.setImageOnFrame(imageResultPanel, imgObj.aditiveControl(imgObj.getImage(),
-							Integer.parseInt(aditiveControlText.getText())
+					MainGui.setImageOnFrame(imageResultPanel, imgObj.applyFilterByType(imgObj.getImage(),
+							3, 5
+					));
+				}catch(NumberFormatException exception) {
+					System.out.println(exception);
+				}
+				
+			}
+		});
+		topPanel.add(btnDetecBordasF);
+		
+		JButton btnDetecBordasF_1 = new JButton("Detec Bordas F2");
+		btnDetecBordasF_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					//int valueToAdd = Integer.parseInt(aditiveControlText.getText()); 
+					MainGui.setImageOnFrame(imageResultPanel, imgObj.applyFilterByType(imgObj.getImage(),
+							3, 6
 					));
 				}catch(NumberFormatException exception) {
 					System.out.println(exception);
 				}
 			}
 		});
+		topPanel.add(btnDetecBordasF_1);
 		
-		downPanel.add(aditiveControlText);
-		downPanel.add(btnAdditiveControl);
-		
-		JTextPane textPane = new JTextPane();
-		downPanel.add(textPane);
-		
-		downPanel.add(multiplicativeControlText);
-
-		/**Button, in down panel, used to multiplicative control */
-		JButton btnMultiplicativeControl = new JButton("Aplicar");
-		btnMultiplicativeControl.addActionListener(new ActionListener() {
+		JButton btnDetecBordasF_2 = new JButton("Detec Bordas F3");
+		btnDetecBordasF_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					//int valueToAdd = Integer.parseInt(aditiveControlText.getText()); 
-					MainGui.setImageOnFrame(imageResultPanel, imgObj.multiplicativeControl(imgObj.getImage(),
-							Integer.parseInt(multiplicativeControlText.getText())
-							));
+					MainGui.setImageOnFrame(imageResultPanel, imgObj.applyFilterByType(imgObj.getImage(),
+							3, 7
+					));
 				}catch(NumberFormatException exception) {
 					System.out.println(exception);
 				}
 			}
 		});
-		downPanel.add(btnMultiplicativeControl);
+		topPanel.add(btnDetecBordasF_2);
+		topPanel.add(btnClearRightSpot);
 		
-		JButton btnSuperposition = new JButton("Sobreposi\u00E7\u00E3o");
-		btnSuperposition.addActionListener(new ActionListener() {
+		
+		panel.add(downPanel, BorderLayout.SOUTH);
+		/*btnKernelSize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(images.size() >= 2) {
-					
-					MainGui.setImageOnFrame(imageResultPanel,
-							imgObj.overlapImages(images.get(images.size()-2) , images.get(images.size()-1)));
+				
+				try {
+					//int valueToAdd = Integer.parseInt(aditiveControlText.getText()); 
+					MainGui.setImageOnFrame(imageResultPanel, imgObj.aditiveControl(imgObj.getImage(),
+							Integer.parseInt(sizeKernelText.getText())
+					));
+				}catch(NumberFormatException exception) {
+					System.out.println(exception);
 				}
-				System.out.println("Not enough images");
+			}
+		});*/
+		
+		downPanel.add(sizeKernelText);
+		
+		JTextPane textPane = new JTextPane();
+		downPanel.add(textPane);
+		
+		JButton btnMediumFilter = new JButton("Filtro m\u00E9dia");
+		btnMediumFilter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//imgObj.getRgbResultMedium(imgObj.getImage(), 3, 5, 5);
+				
+				try {
+					//int valueToAdd = Integer.parseInt(aditiveControlText.getText()); 
+					MainGui.setImageOnFrame(imageResultPanel, imgObj.applyFilterByType(imgObj.getImage(),
+							Integer.parseInt(sizeKernelText.getText()), 1
+					));
+				}catch(NumberFormatException exception) {
+					System.out.println(exception);
+				}
+				
+				
 			}
 		});
-		downPanel.add(btnSuperposition);
+		downPanel.add(btnMediumFilter);
+		
+		JButton btnMedianaFilter = new JButton("Filtro mediana");
+		btnMedianaFilter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					//int valueToAdd = Integer.parseInt(aditiveControlText.getText()); 
+					MainGui.setImageOnFrame(imageResultPanel, imgObj.applyFilterByType(imgObj.getImage(),
+							Integer.parseInt(sizeKernelText.getText()), 2
+					));
+				}catch(NumberFormatException exception) {
+					System.out.println(exception);
+				}
+			}
+		});
+		downPanel.add(btnMedianaFilter);
+		
+		JButton btnModaFilter = new JButton("Filtro moda");
+		btnModaFilter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					//int valueToAdd = Integer.parseInt(aditiveControlText.getText()); 
+					MainGui.setImageOnFrame(imageResultPanel, imgObj.applyFilterByType(imgObj.getImage(),
+							Integer.parseInt(sizeKernelText.getText()), 3
+					));
+				}catch(NumberFormatException exception) {
+					System.out.println(exception);
+				}
+				
+			}
+		});
+		downPanel.add(btnModaFilter);
+		
+		JButton btnFiltroGaussiano = new JButton("Filtro Gaussiano");
+		btnFiltroGaussiano.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					//int valueToAdd = Integer.parseInt(aditiveControlText.getText()); 
+					MainGui.setImageOnFrame(imageResultPanel, imgObj.applyFilterByType(imgObj.getImage(),
+							3, 4
+					));
+				}catch(NumberFormatException exception) {
+					System.out.println(exception);
+				}
+			}
+		});
+		downPanel.add(btnFiltroGaussiano);
 		
 		JSplitPane splitPane = new JSplitPane();
 		panel.add(splitPane, BorderLayout.CENTER);
